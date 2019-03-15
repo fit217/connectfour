@@ -47,16 +47,25 @@ public class minimaxPlayer extends Player{
 	public void chooseMove ( ConnectFourBoard board ) {
 		reset();//resets move and stop at the start of the turn
 		//TODO determine the move
-		int choice=miniMax();
+		int choice=miniMax(0,0);
 		//TODO make a move
 		if(choice==-1) {
 			move_ = new Move(piece_,board.getLegalMove(),true);
 		}
 		move_=new Move(piece_,choice,false);
 	}
-	public int miniMax() {
-		//TODO determine the column to be chosen
-		return -1;
+	public int miniMax(int position, int depth) {
+		//if we have timed out
+		if(stop_) {
+			return -1;
+		}
+		
+	//TODO determine the column to be chosen
+		//TODO perform move to alter the state
+		//gui.drop()
+		//TODO reset the board?
+		//gui.undrop()
+		return 0;
 	}
 	
 }
