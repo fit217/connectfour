@@ -27,7 +27,7 @@ public class HumanPlayer extends Player {
 	public HumanPlayer ( GamePiece piece, ConnectFourGUI gui ) {
 		super(piece,Long.MAX_VALUE);
 		gui_ = gui;
-		estimate_=new Estimate();
+		estimate_=new Estimate(this);
 	}
 
 	@Override
@@ -58,6 +58,6 @@ public class HumanPlayer extends Player {
 				}
 			
 		}
-		//estimate_.h(board,piece_);
+		estimate_.h(board,piece_);
 	}
 }

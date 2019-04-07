@@ -12,9 +12,12 @@ import game.Player;
  * @author chase
  */
 public class Estimate implements EvalHeuristic {
-
-	public Estimate () {
-
+Player player_;
+public Estimate() {
+	player_=null;
+}
+	public Estimate (Player player) {
+		player_=player;
 	}
 
 	/*
@@ -55,96 +58,69 @@ public class Estimate implements EvalHeuristic {
 		for ( int i = 0 ; i < 7 ; i++ ) {
 			group.add(0);
 		}
-		int rowVal=0;
-		int colValR=0;
-		int colValL=0;
-		int diagVal=0;
-		/*
-		 * for ( int i = 0 ; i < 4 ; i++ ) { if ( inHeight(board,row - i) &&
-		 * board.getPiece(row - i,col) != GamePiece.NONE && group.get(0) != -1 ) {
-		 * if ( isEqual(player,board.getPiece(row - i,col)) ) {
-		 * group.set(0,group.get(0) + 1); } else { group.set(0,-1); } } if (
-		 * inWidth(board,col + i) && board.getPiece(row,col + i) != GamePiece.NONE
-		 * && group.get(1) != -1 ) { if ( isEqual(player,board.getPiece(row,col +
-		 * i)) ) group.set(1,group.get(1) + 1); else group.set(1,-1); } if (
-		 * inWidth(board,col - i) && board.getPiece(row,col - i) != GamePiece.NONE
-		 * && group.get(2) != -1 ) { if ( isEqual(player,board.getPiece(row,col -
-		 * i)) ) group.set(2,group.get(2) + 1); else group.set(2,-1); } if (
-		 * inWidth(board,col + i) && inHeight(board,row + i) && board.getPiece(row +
-		 * i,col + i) != GamePiece.NONE && group.get(3) != -1 ) { if (
-		 * isEqual(player,board.getPiece(row + i,col)) ) group.set(3,group.get(3) +
-		 * 1); else group.set(3,-1); } if ( inWidth(board,col + i) &&
-		 * inHeight(board,row - i) && board.getPiece(row - i,col + i) !=
-		 * GamePiece.NONE && group.get(4) != -1 ) { if (
-		 * isEqual(player,board.getPiece(row - i,col + i)) )
-		 * group.set(4,group.get(4) + 1); else group.set(4,-1); } if (
-		 * inWidth(board,col - i) && inHeight(board,row + i) && board.getPiece(row +
-		 * i,col - i) != GamePiece.NONE && group.get(5) != -1 ) { if (
-		 * isEqual(player,board.getPiece(row + i,col - i)) )
-		 * group.set(5,group.get(5) + 1); else group.set(5,-1); } if (
-		 * inWidth(board,col - i) && inHeight(board,row - i) && board.getPiece(row -
-		 * i,col - i) != GamePiece.NONE && group.get(6) != -1 ) { if (
-		 * isEqual(player,board.getPiece(row - i,col - i)) )
-		 * group.set(6,group.get(6) + 1); else group.set(6,-1); } }
-		 */
 
-		for ( int i = -3 ; i <= 0 ; i++ ) {
-			if ( validSpotCheck(board, row+i,col) || rowVal==-1) {
-				continue;
-			}
-			if ( isEqual(player,board.getPiece(row + i,col)) ) rowVal++;
-			else rowVal = -1;
-			for ( int j = -3 ; j < 4 ; j++ ) {
-				if (validSpotCheck(board, row,col+j) ) {
-					continue;
-				}
-				if ( isEqual(player,board.getPiece(row,col + j)) ) {
-					if ( j < 0 && colValL >= 0 ) {
-						colValL++;
-					} else if ( j > 0 && colValR >= 0 ) {
-						colValR++;
-					}
-				} else {
-					if ( j < 0 ) {
-						colValL = -1;
-					} else {
-						colValR = -1;
-					}
-				}
-				if ( i == j ) {
-					if ( isEqual(player,board.getPiece(row + i,col + j)) ) diagVal++;
-				}
-			}
+		group.set(0,checkDirection(board,row,col,-1,0));
+		group.set(1,checkDirection(board,row,col,0,1));
+		group.set(2,checkDirection(board,row,col,0,-1));
+		group.set(3,checkDirection(board,row,col,1,1));
+		group.set(4,checkDirection(board,row,col,-1,1));
+		group.set(5,checkDirection(board,row,col,1,-1));
+		group.set(6,checkDirection(board,row,col,-1,-1));
+		if((groupValue(group.get(0)) + groupValue(group.get(1))
+    + groupValue(group.get(2)) + groupValue(group.get(3))
+    + groupValue(group.get(4)) + groupValue(group.get(5))
+    + groupValue(group.get(6)))>0) {
+
+			/*System.out.println("In Row Below: " + group.get(0));
+			System.out.println("In Column to the left: " + group.get(1));
+			System.out.println("In Column to the right: " + group.get(2));
+			System.out.println("In diagonal to the Upper right: " + group.get(3));
+			System.out.println("In diagonal to the Lower right: " + group.get(4));
+			System.out.println("In diagonal to the Upper left: " + group.get(5));
+			System.out.println("In diagonal to the Lower left: " + group.get(6));*/
+			System.out.println("Check for position :" + row+", "+col);
+			System.out.println((groupValue(group.get(0)) + groupValue(group.get(1))
+	    + groupValue(group.get(2)) + groupValue(group.get(3))
+	    + groupValue(group.get(4)) + groupValue(group.get(5))
+	    + groupValue(group.get(6))));
 		}
-
-		/*System.out.println("In Row Below: " + group.get(0));
-		System.out.println("In Column to the left: " + group.get(1));
-		System.out.println("In Column to the right: " + group.get(2));
-		System.out.println("In diagonal to the Upper right: " + group.get(3));
-		System.out.println("In diagonal to the Lower right: " + group.get(4));
-		System.out.println("In diagonal to the Upper left: " + group.get(5));
-		System.out.println("In diagonal to the Lower left: " + group.get(6));
 		return (groupValue(group.get(0)) + groupValue(group.get(1))
 		    + groupValue(group.get(2)) + groupValue(group.get(3))
 		    + groupValue(group.get(4)) + groupValue(group.get(5))
-		    + groupValue(group.get(6)));*/
-		if((groupValue(colValL)+groupValue(colValR)+groupValue(rowVal))>0) {
-			System.out.println("Position : " +row+", "+col+ " has values:");
-			System.out.println("In Column left: "+ colValL);
-			System.out.println("In Column right: " + colValR);
-			System.out.println("In Row Below: "+ rowVal);
-		}
-		return groupValue(colValL)+groupValue(colValR)+groupValue(rowVal);
+		    + groupValue(group.get(6)));
 
 	}
-	private boolean validSpotCheck(ConnectFourBoard board, int row, int column) {
-		if(!inHeight(board,row) || !(inWidth(board,column))) {
-			return true;
+
+	private int checkDirection(ConnectFourBoard board, int row,int col, int x, int y) {
+		int value=0;
+		try {
+		for(int i=1;i<4;i++) {
+				GamePiece target=board.getPiece(row+(x*i),col+(y*i));
+				if(target==GamePiece.NONE) {
+					continue;
+				}
+				if(player_.isMine(target)) {
+					value++;
+				}
+				else {
+					return -1;
+				}
 		}
-		if(board.getPiece(row,column) == GamePiece.NONE) {
-			return true;
+		return value;
+		}catch(IllegalArgumentException e) {
+			return -1;
 		}
-		return false;
+	}
+
+	private boolean validSpotCheck ( ConnectFourBoard board, int row,
+	                                 int column ) {
+		if ( !inHeight(board,row) || !(inWidth(board,column)) ) {
+			return false;
+		}
+		if ( board.getPiece(row,column) == GamePiece.NONE ) {
+			return false;
+		}
+		return true;
 	}
 
 	private boolean inWidth ( ConnectFourBoard board, int col ) {
