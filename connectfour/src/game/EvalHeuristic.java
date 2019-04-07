@@ -34,4 +34,6 @@ public interface EvalHeuristic {
 	 * @return min value
 	 */
 	public double min ();
+
+	
 }

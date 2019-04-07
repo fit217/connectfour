@@ -3,6 +3,8 @@ package game;
 import java.util.ArrayList;
 import java.util.List;
 
+import heuristics.Estimate;
+
 /**
  * Game logic for a game of Connect Four, with time limits on each player's
  * move.
@@ -15,6 +17,7 @@ public class ConnectFourDriver {
 
 		private Player player_;
 		private ConnectFourBoard board_;
+		public Estimate estimate_=new Estimate();
 
 		/**
 		 * @param player
@@ -80,6 +83,7 @@ public class ConnectFourDriver {
 			turn.join();
 			// get the player's move
 			Move move = players[curplayer].getMove();
+			
 			if ( move == null ) {
 				throw new IllegalStateException("player " + players[curplayer].getName()
 				    + " did not make a move");
