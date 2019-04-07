@@ -27,7 +27,7 @@ public Estimate() {
 	@Override
 	public double h ( ConnectFourBoard board, GamePiece player ) {
 		// TODO Auto-generated method stub
-		if ( board.isEmpty() ) {
+		/*if ( board.isEmpty() ) {
 			return Integer.MAX_VALUE;
 		}
 		int playerVal = 0;
@@ -39,7 +39,7 @@ public Estimate() {
 				playerVal += getValue(board,player,row,col);
 			}
 		}
-		return playerVal - opponentVal;
+		return playerVal - opponentVal;*/
 	}
 
 	/**
