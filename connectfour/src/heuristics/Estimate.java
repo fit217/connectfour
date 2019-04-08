@@ -27,7 +27,7 @@ public Estimate() {
 	@Override
 	public double h ( ConnectFourBoard board, GamePiece player ) {
 		// TODO Auto-generated method stub
-		/*if ( board.isEmpty() ) {
+		if ( board.isEmpty() ) {
 			return Integer.MAX_VALUE;
 		}
 		int playerVal = 0;
@@ -39,7 +39,8 @@ public Estimate() {
 				playerVal += getValue(board,player,row,col);
 			}
 		}
-		return playerVal - opponentVal;*/
+		System.out.println("The value of this board is " + playerVal);
+		return playerVal - opponentVal;
 	}
 
 	/**
@@ -78,11 +79,6 @@ public Estimate() {
 			System.out.println("In diagonal to the Lower right: " + group.get(4));
 			System.out.println("In diagonal to the Upper left: " + group.get(5));
 			System.out.println("In diagonal to the Lower left: " + group.get(6));*/
-			System.out.println("Check for position :" + row+", "+col);
-			System.out.println((groupValue(group.get(0)) + groupValue(group.get(1))
-	    + groupValue(group.get(2)) + groupValue(group.get(3))
-	    + groupValue(group.get(4)) + groupValue(group.get(5))
-	    + groupValue(group.get(6))));
 		}
 		return (groupValue(group.get(0)) + groupValue(group.get(1))
 		    + groupValue(group.get(2)) + groupValue(group.get(3))
