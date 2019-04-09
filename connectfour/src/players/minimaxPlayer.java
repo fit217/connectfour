@@ -13,54 +13,6 @@ import gui.ConnectFourGUI;
 import heuristics.Estimate;
 import sun.misc.Queue;
 
-
-class TreeNode{
-	 static int nodeCount = 0;
-	 private ArrayList<TreeNode> children_;
-	 private double val_;
-	 private TreeNode parent_;
-	 private int generation_;
-	 
-	 public TreeNode(double val) {
-		 val_ = val; 
-		 parent_ = null;
-		 generation_ = 0;
-	 }
-	 public TreeNode(double val, TreeNode parent) {
-		 val_ = val; 
-		 parent_ = parent;
-		 generation_ = this.getParent().getGen() + 1;
-	 }
-	 public TreeNode(TreeNode parent) {
-		 val_ = -1;
-		 parent_ = parent;
-		 generation_ = this.getParent().getGen() + 1;
-	 }
-	 
-	 public TreeNode getParent() {
-		 return parent_;
-	 }
-	 
-	 public ArrayList<TreeNode> getChildren(){
-		 return children_;
-	 }
-	 
-	 public double getVal() {
-		 return val_;
-	 }
-	 
-	 public void addChild(TreeNode child) {
-		 children_.add(child);
-	 }
-	 public static int getNodeCount() {
-		 return nodeCount;
-	 }
-	 public int getGen() {
-		 return generation_;
-	 }
-	
-}
-
 /**
  * @author chase
  *
@@ -68,7 +20,9 @@ class TreeNode{
 public class minimaxPlayer extends Player{
 	private ConnectFourGUI gui_;// GUI
 	private Estimate estimate_;
-	private Stack<TreeNode> stack_;
+	private Stack<Integer> stack_;
+	private static int maxCalled = 0;
+	private static int minCalled = 0;
 
 	
 	/**
@@ -108,57 +62,108 @@ public class minimaxPlayer extends Player{
 		reset();//resets move and stop at the start of the turn
 		//TODO determine the move
 		int choice = 3;
+		System.out.println(super.getTimeout());
 		try {
-			choice = miniMax(board,0,1);
+			choice = miniMax(board,1);
 		} catch ( GameRuleViolation e ) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
+		System.out.println("Player is making a move");
 		move_=new Move(piece_,choice,false);
 	}
 	public int miniMax(ConnectFourBoard board, int depth) throws GameRuleViolation {
-			int level = 1;
-			double best = Double.NEGATIVE_INFINITY;
-			while(!super.stop_) {
-				best = Math.max(best,maxValue(board,0,level));
-				level++;
-				
+			double best = 3;
+			long currentTime = 0;
+			while(depth != 2) {
+				best = maxValue(board,0,depth);
+				System.out.println(best);
+				minCalled = 0;
+				maxCalled = 0;
+				depth++;
 			}
+			return (int) best;
 		}
 	
 	private double maxValue(ConnectFourBoard state,int level, int depth) {
+		//System.out.println(level);
+		maxCalled++;
+		System.out.println("max called " + maxCalled);
 		if(level == depth) {
-			return  new Estimate().h(state,getPiece());
+			//System.out.println(new Estimate(this).h(state,piece_));
+			System.out.println("Terminal state");
+			return new Estimate(this).h(state,piece_);
 		}
 		double v = Double.NEGATIVE_INFINITY;
+		double best = 3;
 		for(int i = 0; i < 7;i++) {
 			ConnectFourBoard newState = state.copy();
+			if(state.isFull(i)) {
+				//System.out.println("board is full in col " + i);
+				continue;
+			}
 			try {
-				newState.drop(getPiece(),i);
+				newState.drop(piece_,i);
 			} catch ( GameRuleViolation e ) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				continue;
 			}
+			//double temp = minValue(newState,level++,depth);
+		  //System.out.println(temp + " vs " + v);
+//			if(v < temp) {
+//				v = temp;
+//				best = i;
+//			}
+
 			v = Math.max(v,minValue(newState,level++,depth));
 		}
+//		if(level == 1) {
+//			return best;
+//		}else {
+//			return v;
+//		}
 		return v;
 	}
 		
 		private double minValue(ConnectFourBoard state,int level, int depth) {
+			minCalled++;
+			System.out.println("min called " + minCalled);
+			//System.out.println(level);
 			if(level == depth) {
-				return new Estimate().h(state,getPiece());
+				//System.out.println(new Estimate(this).h(state,piece_.other()));
+				System.out.println("Terminal state");
+				return new Estimate(this).h(state,piece_.other());
 			}
+			double best = 3;
 			double v = Double.POSITIVE_INFINITY;
 			for(int i = 0; i < 7;i++) {
 				ConnectFourBoard newState = state.copy();
+				if(newState.isFull(i)) {
+					//System.out.println("board is full in col " + i);
+					continue;
+				}
 				try {
-					newState.drop(getPiece(),i);
+					newState.drop(piece_.other(),i);
 				} catch ( GameRuleViolation e ) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					continue;
 				}
+				//double temp = maxValue(newState,level++,depth);
+			  //System.out.println(temp + " vs " + v);
+//				if(v > temp) {
+//					v = temp;
+//					best = i;
+//				}
+
 				v = Math.min(v,maxValue(newState,level++,depth));
 			}
+//			if(level == 1) {
+//				return best;
+//			}else {
+//				return v;
+//			}
 			return v;
 		}
 

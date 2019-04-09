@@ -39,7 +39,7 @@ public Estimate() {
 				playerVal += getValue(board,player,row,col);
 			}
 		}
-		System.out.println("The value of this board is " + playerVal);
+		//System.out.println("The value of this board is " + playerVal);
 		return playerVal - opponentVal;
 	}
 
