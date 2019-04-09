@@ -109,21 +109,21 @@ public class minimaxPlayer extends Player{
 				e.printStackTrace();
 				continue;
 			}
-			//double temp = minValue(newState,level++,depth);
-		  //System.out.println(temp + " vs " + v);
-//			if(v < temp) {
-//				v = temp;
-//				best = i;
-//			}
+			double temp = minValue(newState,level++,depth);
+		  System.out.println(temp + " vs " + v);
+			if(v < temp) {
+				v = temp;
+				best = i;
+			}
 
 			v = Math.max(v,minValue(newState,level++,depth));
 		}
-//		if(level == 1) {
-//			return best;
-//		}else {
-//			return v;
-//		}
-		return v;
+		if(level == 1) {
+			return best;
+		}else {
+			return v;
+		}
+//		return v;
 	}
 		
 		private double minValue(ConnectFourBoard state,int level, int depth) {
@@ -150,21 +150,21 @@ public class minimaxPlayer extends Player{
 					e.printStackTrace();
 					continue;
 				}
-				//double temp = maxValue(newState,level++,depth);
-			  //System.out.println(temp + " vs " + v);
-//				if(v > temp) {
-//					v = temp;
-//					best = i;
-//				}
+				double temp = maxValue(newState,level++,depth);
+			  System.out.println(temp + " vs " + v);
+				if(v > temp) {
+					v = temp;
+					best = i;
+				}
 
-				v = Math.min(v,maxValue(newState,level++,depth));
+				//v = Math.min(v,maxValue(newState,level++,depth));
 			}
-//			if(level == 1) {
-//				return best;
-//			}else {
-//				return v;
-//			}
-			return v;
+			if(level == 1) {
+				return best;
+			}else {
+				return v;
+			}
+			//return v;
 		}
 
 
