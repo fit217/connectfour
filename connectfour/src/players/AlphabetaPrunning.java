@@ -37,7 +37,10 @@ public class AlphabetaPrunning extends Player{
 		// TODO Auto-generated constructor stub
 		gui_ = gui;
 	}
-
+	public AlphabetaPrunning ( GamePiece piece, long timeout ) {
+		super(piece,timeout);
+		// TODO Auto-generated constructor stub
+	}
 	/* (non-Javadoc)
 	 * @see game.Player#chooseMove(game.ConnectFourBoard)
 	 */
@@ -56,7 +59,7 @@ public class AlphabetaPrunning extends Player{
 
 			depth++;
 		}
-		System.out.println("ABP depth: " + depth);
+		//System.out.println("ABP depth: " + depth);
 		return best;
 	}
 	

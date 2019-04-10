@@ -26,7 +26,10 @@ public class ABPwMO extends Player{
 		gui_ = gui;
 		// TODO Auto-generated constructor stub
 	}
-
+	public ABPwMO ( GamePiece piece, long timeout ) {
+		super(piece,timeout);
+		// TODO Auto-generated constructor stub
+	}
 
 
 	/* (non-Javadoc)
@@ -53,7 +56,7 @@ public class ABPwMO extends Player{
 			if(new Estimate(this).hs(board,piece_,best.getMove()) >= 4096) break;
 			depth++;
 		}
-		System.out.println("ABP depth: " + depth);
+		//System.out.println("ABP depth: " + depth);
 		return best;
 	}
 	
@@ -122,7 +125,6 @@ public class ABPwMO extends Player{
 			}
 			beta = Math.min(beta,v);
 			if(alpha >= beta) {
-				//System.out.println("Prunned at " + level);
 				break;
 			}
 		}

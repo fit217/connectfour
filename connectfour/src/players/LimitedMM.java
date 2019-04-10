@@ -25,6 +25,10 @@ public class LimitedMM extends Player{
 		gui_ = gui;
 		depth_ = Integer.max(1,depth);
 	}
+	public LimitedMM ( GamePiece piece,long timeout,int depth ) {
+		super(piece,Long.MAX_VALUE);
+		depth_ = Integer.max(1,depth);
+	}
 	@Override
 	public void chooseMove ( ConnectFourBoard board) {
 		reset();// resets move and stop at the start of the turn
@@ -43,7 +47,7 @@ public class LimitedMM extends Player{
 			depth++;
 			}
 		}
-		System.out.println("miniMax depth: " + depth);
+		//System.out.println("miniMax depth: " + depth);
 		return  best;
 
 	}

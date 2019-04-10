@@ -25,6 +25,11 @@ public class LimitedABP extends Player{
 		gui_ = gui;
 		depth_ = Integer.max(1,depth);
 	}
+	public LimitedABP ( GamePiece piece, long timeout, int depth ) {
+		super(piece,timeout);
+		// TODO Auto-generated constructor stub
+		depth_ = Integer.max(1,depth);
+	}
 	@Override
 	public void chooseMove ( ConnectFourBoard board ) {
 		reset();
@@ -43,7 +48,7 @@ public class LimitedABP extends Player{
 			depth++;
 			}
 		}
-		System.out.println("ABP depth: " + depth);
+		//System.out.println("ABP depth: " + depth);
 		return best;
 	}
 	

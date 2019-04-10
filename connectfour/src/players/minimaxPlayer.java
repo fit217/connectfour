@@ -16,8 +16,6 @@ import heuristics.Estimate;
  */
 public class minimaxPlayer extends Player {
 	private ConnectFourGUI gui_;// GUI
-
-
 	/**
 	 * Create a default minimax player.
 	 * 
@@ -27,10 +25,8 @@ public class minimaxPlayer extends Player {
 	 *          the GUI for getting the player's move
 	 */
 	public minimaxPlayer ( GamePiece piece, ConnectFourGUI gui ) {
-
 		super(piece,Long.MAX_VALUE);
 		gui_ = gui;
-
 	}
 
 	/**
@@ -46,9 +42,10 @@ public class minimaxPlayer extends Player {
 	public minimaxPlayer ( GamePiece piece, ConnectFourGUI gui, Long timeOut ) {
 		super(piece,timeOut);
 		gui_ = gui;
-
 	}
-
+	public minimaxPlayer ( GamePiece piece, Long timeOut ) {
+		super(piece,timeOut);
+	}
 	/*
 	 * (non-Javadoc)
 	 * @see game.Player#chooseMove(game.ConnectFourBoard)
@@ -97,10 +94,8 @@ public class minimaxPlayer extends Player {
 				max = newState;
 			}
 			//System.out.println("V is currently " + v);
-			if(v >= 4096) System.out.println("Winning move on level " + level + " at position " + max.getMove());
-			
+			if(v >= 4096) System.out.println("Winning move on level " + level + " at position " + max.getMove());		
 		}
-
 		 return max;
 	}
 
