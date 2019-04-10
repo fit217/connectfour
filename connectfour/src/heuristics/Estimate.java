@@ -57,7 +57,7 @@ public class Estimate implements EvalHeuristic {
 		int row;
 		int playerVal = 0;
 		if ( (row = getTopMostEmpty(board,col)) != -1 ) {
-			playerVal += getValue(board,player,row,col);
+			playerVal += getValue(board,player,row,col);	
 		}
 		return playerVal;
 	}

@@ -28,8 +28,9 @@ public class ConnectFour {
 
 		//Player player1 = new HumanPlayer(GamePiece.YELLOW,gui);
 		//Player player2 = new HumanPlayer(GamePiece.RED,gui);
-		Player player1=new RandomPlayer(GamePiece.YELLOW,3000);
-		Player player2 = new AlphabetaPrunning(GamePiece.RED,gui,(long)3000);
+
+		Player player1 = new AlphabetaPrunning(GamePiece.RED,gui,(long)3000);
+		Player player2=new minimaxPlayer(GamePiece.YELLOW,gui,(long)3000);
 
 		try {
 			PlayedGame result = driver.playGame(player1,player2,board);

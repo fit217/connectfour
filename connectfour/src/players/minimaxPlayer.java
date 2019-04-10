@@ -1,9 +1,4 @@
 package players;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Stack;
-
 import game.ConnectFourBoard;
 import game.GamePiece;
 import game.GameRuleViolation;
@@ -11,7 +6,6 @@ import game.Move;
 import game.Player;
 import gui.ConnectFourGUI;
 import heuristics.Estimate;
-import sun.misc.Queue;
 
 
 
@@ -22,8 +16,7 @@ import sun.misc.Queue;
  */
 public class minimaxPlayer extends Player {
 	private ConnectFourGUI gui_;// GUI
-	private static int maxCalled = 0;
-	private static int minCalled = 0;
+
 
 	/**
 	 * Create a default minimax player.
@@ -63,141 +56,77 @@ public class minimaxPlayer extends Player {
 	@Override
 	public void chooseMove ( ConnectFourBoard board ) {
 		reset();// resets move and stop at the start of the turn
-		// TODO determine the move
-		int choice = 3;
-		//System.out.println(super.getTimeout());
-		try {
-			choice = miniMax(board,1);
-		} catch ( GameRuleViolation e ) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println("MiniMax Player is making a move");
-/*		ConnectFourBoard newState = board.copy();
-		try {
-			newState.drop(piece_,choice);
-			System.out.println("Piece dropped at " + new Estimate(this).getTopMostEmpty(board,choice) + ", " + choice);
-			System.out.println("The board value for minimax player is no " + new Estimate(this).h(newState,piece_));
-		} catch ( GameRuleViolation e ) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-*/		
-		//System.out.println("Column " + choice + ", Row" + new Estimate(this).getTopMostEmpty(board,choice));
-		//System.out.println("Move is at column " + choice +  ", Value : " + new Estimate(this).getValue(board,this.piece_,choice,new Estimate(this).getTopMostEmpty(board,choice)));
-		
-		move_ = new Move(piece_,choice,false);
+		State best = miniMax(board);
+		move_ = new Move(piece_,best.getMove(),false);
 
 	}
 
-	public int miniMax ( ConnectFourBoard board, int depth )
-	    throws GameRuleViolation {
-
-		double best = 3;
-
-		while ( depth != 4 ) {
-			if ( !stop_ ) {
-				best = maxValue(board,0,depth);
-				//System.out.println(best);
-				minCalled = 0;
-				maxCalled = 0;
-				depth++;
-			}
-			else
-				break;
+	public State miniMax (ConnectFourBoard board ){
+		int depth = 1;
+		State best = new State(3,board);
+		while (!stop_ ) {
+			best = maxValue(best,0,depth);
+			if(new Estimate(this).hs(board,piece_,best.getMove()) >= 4096) break;
+			depth++;
 		}
-		return (int) best;
+		System.out.println("miniMax depth: " + depth);
+		return  best;
 
 	}
 
-	private double maxValue ( ConnectFourBoard state, int level, int depth ) {
-		// System.out.println(level);
-		if(stop_) {
-			return new Estimate(this).h(state,piece_);
+	private State maxValue ( State state, int level, int depth ) {
+		if(level == depth || state.getBoard().getWinner()!=GamePiece.NONE) {
+			return state;
 		}
-		maxCalled++;
-		//System.out.println("max called " + maxCalled);
-		if ( level == depth ) {
-			// System.out.println(new Estimate(this).h(state,piece_));
-			//System.out.println("Terminal state");
-			return new Estimate(this).h(state,piece_);
-		}
+		State max = state;
 		double v = Double.NEGATIVE_INFINITY;
-		double best = 3;
+
 		for ( int i = 0 ; i < 7 ; i++ ) {
-			ConnectFourBoard newState = state.copy();
-			if ( state.isFull(i) ) {
-				// System.out.println("board is full in col " + i);
-				continue;
-			}
+			ConnectFourBoard temp = state.getBoard().copy();
 			try {
-				newState.drop(piece_,i);
+				temp.drop(piece_.other(),i);
 			} catch ( GameRuleViolation e ) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//System.out.println("col " + i + " is full");
 				continue;
 			}
-			double temp = minValue(newState,level+1,depth);
-			//System.out.println(temp + " vs " + v);
-			if ( v < temp ) {
-				v = temp;
-				best = i;
-			}
+			State newState = minValue(new State(i,temp),level+1,depth);
 
-			//v = Math.max(v,minValue(newState,level+1,depth));
+			double comp = new Estimate(this).hs(newState.getBoard(),piece_,newState.getMove());
+			if(v < comp) {
+				v= comp;
+				max = newState;
+			}
+			//System.out.println("V is currently " + v);
+			if(v >= 4096) System.out.println("Winning move on level " + level + " at position " + max.getMove());
+			
 		}
-		if ( level == 0 ) {
-			return best;
-		} else {
-			return v;
-		}
-		// return v;
+
+		 return max;
 	}
 
-	private double minValue ( ConnectFourBoard state, int level, int depth ) {
-		if(stop_) {
-			return new Estimate(this).h(state,piece_.other());
+	private State minValue (State  state, int level, int depth ) {
+		if(level == depth || state.getBoard().getWinner()!=GamePiece.NONE) {
+			return state;
 		}
-		minCalled++;
-		//System.out.println("min called " + minCalled);
-		// System.out.println(level);
-		if ( level == depth ) {
-			// System.out.println(new Estimate(this).h(state,piece_.other()));
-			//System.out.println("Terminal state");
-			return new Estimate(this).h(state,piece_.other());
-		}
-		double best = 3;
+		State min = state;
 		double v = Double.POSITIVE_INFINITY;
-		for ( int i = 0 ; i < 7 ; i++ ) {
-			ConnectFourBoard newState = state.copy();
-			if ( newState.isFull(i) ) {
-				// System.out.println("board is full in col " + i);
-				continue;
-			}
+		for(int i = 0; i < 7; i++) {
+			ConnectFourBoard temp = state.getBoard().copy();
 			try {
-				newState.drop(piece_.other(),i);
+				temp.drop(piece_,i);
 			} catch ( GameRuleViolation e ) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//System.out.println("col " + i + " is full");
 				continue;
 			}
-			double temp = maxValue(newState,level+1,depth);
-			//System.out.println(temp + " vs " + v);
-
-			if ( v > temp ) {
-				v = temp;
-				best = i;
-			}
-
-			//v = Math.min(v,maxValue(newState,level+1,depth));
+			State newState = maxValue(new State(i,temp),level+1,depth);
+			double comp = new Estimate(this).hs(newState.getBoard(),piece_,newState.getMove());
+			if(v > comp) {
+				v= comp;
+				min = newState;
+			}	
 		}
-		/*if ( level == 1 ) {
-			System.out.println(best +"_____min");
-			return best;
-		} else {
-			return v;
-		}*/
-		 return v;
+		return min;
 	}
 
 }

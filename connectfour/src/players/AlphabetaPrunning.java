@@ -56,7 +56,7 @@ public class AlphabetaPrunning extends Player{
 			if(new Estimate(this).hs(board,piece_,best.getMove()) >= 4096) break;
 			depth++;
 		}
-		System.out.println(depth);
+		System.out.println("ABP depth: " + depth);
 		return best;
 	}
 	
@@ -82,7 +82,7 @@ public class AlphabetaPrunning extends Player{
 				v= comp;
 				max = newState;
 			}
-			System.out.println("V is currently " + v);
+			//System.out.println("V is currently " + v);
 			if(v >= 4096) System.out.println("Winning move on level " + level + " at position " + max.getMove());
 			alpha = Math.max(alpha,v);
 			if(alpha >= beta) {
