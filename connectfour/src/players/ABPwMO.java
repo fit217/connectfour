@@ -88,7 +88,7 @@ public class ABPwMO extends Player{
 				max = newState;
 			}
 			//System.out.println("V is currently " + v);
-			if(v >= 4096) System.out.println("Winning move on level " + level + " at position " + max.getMove());
+			//if(v >= 4096) System.out.println("Winning move on level " + level + " at position " + max.getMove());
 			alpha = Math.max(alpha,v);
 			if(alpha >= beta) {
 				//System.out.println("Prunned at " + level);

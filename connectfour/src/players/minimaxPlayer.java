@@ -65,7 +65,7 @@ public class minimaxPlayer extends Player {
 			best = maxValue(best,0,depth);
 			depth++;
 		}
-		System.out.println("miniMax depth: " + depth);
+		//System.out.println("miniMax depth: " + depth);
 		return  best;
 
 	}
@@ -94,7 +94,7 @@ public class minimaxPlayer extends Player {
 				max = newState;
 			}
 			//System.out.println("V is currently " + v);
-			if(v >= 4096) System.out.println("Winning move on level " + level + " at position " + max.getMove());		
+			//if(v >= 4096) System.out.println("Winning move on level " + level + " at position " + max.getMove());		
 		}
 		 return max;
 	}

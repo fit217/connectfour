@@ -6,7 +6,12 @@ import game.GamePiece;
 import game.GameRuleViolation;
 import game.PlayedGame;
 import game.Player;
+import players.ABPwMO;
+import players.AlphabetaPrunning;
+import players.LimitedABP;
+import players.LimitedMM;
 import players.RandomPlayer;
+import players.minimaxPlayer;
 
 /**
  * Play a tournament (without a GUI) and track win/loss/draw statistics. Each
@@ -26,11 +31,11 @@ public class ConnectFourTournament {
 		ConnectFourDriver driver = new ConnectFourDriver();
 
 		// time allowed per turn (ms)
-		final int TIME_LIMIT = 1000;
+		final int TIME_LIMIT = 100;
 
 		// the players - each player 1 plays every player 2
-		Player[] player1s = { new RandomPlayer(GamePiece.YELLOW,TIME_LIMIT) };
-		Player[] player2s = { new RandomPlayer(GamePiece.RED,TIME_LIMIT) };
+		Player[] player1s = { new RandomPlayer(GamePiece.YELLOW,TIME_LIMIT),new LimitedMM(GamePiece.YELLOW,(long)TIME_LIMIT, 2),new LimitedMM(GamePiece.YELLOW,(long)TIME_LIMIT, 5), new minimaxPlayer(GamePiece.YELLOW,(long)TIME_LIMIT), new LimitedABP(GamePiece.YELLOW,(long)TIME_LIMIT, 2), new LimitedABP(GamePiece.YELLOW,(long)TIME_LIMIT, 5),  new AlphabetaPrunning(GamePiece.YELLOW,(long)TIME_LIMIT),new ABPwMO(GamePiece.YELLOW,(long)TIME_LIMIT) };
+		Player[] player2s = { new RandomPlayer(GamePiece.RED,TIME_LIMIT)};
 
 		// number of game to play with each combination
 		final int NUMREPS = 10;
