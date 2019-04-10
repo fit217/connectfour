@@ -7,6 +7,7 @@ import game.GameRuleViolation;
 import game.PlayedGame;
 import game.Player;
 import gui.ConnectFourGUI;
+import players.ABPwMO;
 import players.AlphabetaPrunning;
 import players.HumanPlayer;
 import players.RandomPlayer;
@@ -30,7 +31,7 @@ public class ConnectFour {
 		//Player player2 = new HumanPlayer(GamePiece.RED,gui);
 
 		Player player1 = new AlphabetaPrunning(GamePiece.RED,gui,(long)3000);
-		Player player2=new minimaxPlayer(GamePiece.YELLOW,gui,(long)3000);
+		Player player2=new ABPwMO(GamePiece.YELLOW,gui,(long)3000);
 
 		try {
 			PlayedGame result = driver.playGame(player1,player2,board);

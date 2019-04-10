@@ -1,4 +1,5 @@
 package players;
+
 import game.ConnectFourBoard;
 import game.GamePiece;
 import game.GameRuleViolation;
@@ -7,40 +8,23 @@ import game.Player;
 import gui.ConnectFourGUI;
 import heuristics.Estimate;
 
-class State{
-	private int move_;
-	private ConnectFourBoard board_;
-	public State(int move, ConnectFourBoard board) {
-		board_ = board;
-		move_ = move;
-	}
-
-	public ConnectFourBoard getBoard() {
-		return board_;
-	}
-	public int getMove() {
-		return move_;
-	}
-}
 /**
  * @author Jonko
  *
  */
-public class AlphabetaPrunning extends Player{
+public class LimitedABP extends Player{
 	private ConnectFourGUI gui_;
+	private int depth_;
 	/**
 	 * @param piece
 	 * @param timeout
 	 */
-	public AlphabetaPrunning ( GamePiece piece,ConnectFourGUI gui, long timeout ) {
+	public LimitedABP ( GamePiece piece, long timeout,ConnectFourGUI gui, int depth ) {
 		super(piece,timeout);
 		// TODO Auto-generated constructor stub
 		gui_ = gui;
+		depth_ = Integer.max(1,depth);
 	}
-
-	/* (non-Javadoc)
-	 * @see game.Player#chooseMove(game.ConnectFourBoard)
-	 */
 	@Override
 	public void chooseMove ( ConnectFourBoard board ) {
 		reset();
@@ -53,8 +37,11 @@ public class AlphabetaPrunning extends Player{
 		State best = new State(2,board);
 		while(!stop_) {
 			best = maxValue( best, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY,0,depth);
-
+			if(depth_ == depth) {
+				break;
+			}else {
 			depth++;
+			}
 		}
 		System.out.println("ABP depth: " + depth);
 		return best;

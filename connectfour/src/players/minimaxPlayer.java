@@ -66,7 +66,6 @@ public class minimaxPlayer extends Player {
 		State best = new State(3,board);
 		while (!stop_ ) {
 			best = maxValue(best,0,depth);
-			if(new Estimate(this).hs(board,piece_,best.getMove()) >= 4096) break;
 			depth++;
 		}
 		System.out.println("miniMax depth: " + depth);
@@ -114,7 +113,7 @@ public class minimaxPlayer extends Player {
 		for(int i = 0; i < 7; i++) {
 			ConnectFourBoard temp = state.getBoard().copy();
 			try {
-				temp.drop(piece_,i);
+				temp.drop(piece_.other(),i);
 			} catch ( GameRuleViolation e ) {
 				//System.out.println("col " + i + " is full");
 				continue;
