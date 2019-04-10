@@ -12,12 +12,14 @@ import game.Player;
  * @author chase
  */
 public class Estimate implements EvalHeuristic {
-Player player_;
-public Estimate() {
-	player_=null;
-}
-	public Estimate (Player player) {
-		player_=player;
+	Player player_;
+
+	public Estimate () {
+		player_ = null;
+	}
+
+	public Estimate ( Player player ) {
+		player_ = player;
 	}
 
 	/*
@@ -37,9 +39,10 @@ public Estimate() {
 			int row;
 			if ( (row = getTopMostEmpty(board,col)) != -1 ) {
 				playerVal += getValue(board,player,row,col);
+				// opponentVal+=getValue(board,player.other(),row,col);
 			}
 		}
-		//System.out.println("The value of this board is " + playerVal);
+		// System.out.println("The value of this board is " + playerVal);
 		return playerVal - opponentVal;
 	}
 
@@ -61,24 +64,24 @@ public Estimate() {
 		}
 
 		group.set(0,checkDirection(board,row,col,-1,0));
-		group.set(1,checkDirection(board,row,col,0,1));
-		group.set(2,checkDirection(board,row,col,0,-1));
+		group.set(1,checkDirection(board,row,col,0,-1));
+		group.set(2,checkDirection(board,row,col,0,1));
 		group.set(3,checkDirection(board,row,col,1,1));
 		group.set(4,checkDirection(board,row,col,-1,1));
 		group.set(5,checkDirection(board,row,col,1,-1));
 		group.set(6,checkDirection(board,row,col,-1,-1));
-		if((groupValue(group.get(0)) + groupValue(group.get(1))
-    + groupValue(group.get(2)) + groupValue(group.get(3))
-    + groupValue(group.get(4)) + groupValue(group.get(5))
-    + groupValue(group.get(6)))>0) {
-
-			/*System.out.println("In Row Below: " + group.get(0));
+		if ( (groupValue(group.get(0)) + groupValue(group.get(1))
+		    + groupValue(group.get(2)) + groupValue(group.get(3))
+		    + groupValue(group.get(4)) + groupValue(group.get(5))
+		    + groupValue(group.get(6))) > 0 ) {
+			System.out.println(row+"__________"+col);
+			System.out.println("In Row Below: " + group.get(0));
 			System.out.println("In Column to the left: " + group.get(1));
 			System.out.println("In Column to the right: " + group.get(2));
 			System.out.println("In diagonal to the Upper right: " + group.get(3));
 			System.out.println("In diagonal to the Lower right: " + group.get(4));
 			System.out.println("In diagonal to the Upper left: " + group.get(5));
-			System.out.println("In diagonal to the Lower left: " + group.get(6));*/
+			System.out.println("In diagonal to the Lower left: " + group.get(6));
 		}
 		return (groupValue(group.get(0)) + groupValue(group.get(1))
 		    + groupValue(group.get(2)) + groupValue(group.get(3))
@@ -87,25 +90,26 @@ public Estimate() {
 
 	}
 
-	private int checkDirection(ConnectFourBoard board, int row,int col, int x, int y) {
-		int value=0;
-		try {
-		for(int i=1;i<4;i++) {
-				GamePiece target=board.getPiece(row+(x*i),col+(y*i));
-				if(target==GamePiece.NONE) {
+	private int checkDirection ( ConnectFourBoard board, int row, int col, int x,
+	                             int y ) {
+		int value = 0;
+
+		for ( int i = 1 ; i < 4 ; i++ ) {
+			try {
+				GamePiece target = board.getPiece(row + (x * i),col + (y * i));
+				if ( target == GamePiece.NONE ) {
 					continue;
 				}
-				if(player_.isMine(target)) {
+				if ( player_.isMine(target) ) {
 					value++;
-				}
-				else {
+				} else {
 					return -1;
 				}
+			} catch ( IllegalArgumentException e ) {
+				break;
+			}
 		}
 		return value;
-		}catch(IllegalArgumentException e) {
-			return -1;
-		}
 	}
 
 	private boolean validSpotCheck ( ConnectFourBoard board, int row,
@@ -133,13 +137,6 @@ public Estimate() {
 		return true;
 	}
 
-	private boolean isEqual ( GamePiece player, GamePiece other ) {
-		if ( player.getColor() == other.getColor() ) {
-			return true;
-		}
-		return false;
-	}
-
 	private int groupValue ( int x ) {
 		switch ( x ) {
 		case -1:
@@ -157,7 +154,7 @@ public Estimate() {
 		}
 	}
 
-	private int getTopMostEmpty ( ConnectFourBoard board, int col ) {
+	public int getTopMostEmpty ( ConnectFourBoard board, int col ) {
 		if ( board.isFull(col) ) {
 			return -1;
 		}
