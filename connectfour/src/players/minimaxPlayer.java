@@ -13,13 +13,15 @@ import gui.ConnectFourGUI;
 import heuristics.Estimate;
 import sun.misc.Queue;
 
+
+
+
+
 /**
  * @author chase
  */
 public class minimaxPlayer extends Player {
 	private ConnectFourGUI gui_;// GUI
-	private Estimate estimate_;
-	private Stack<Integer> stack_;
 	private static int maxCalled = 0;
 	private static int minCalled = 0;
 
@@ -95,9 +97,8 @@ public class minimaxPlayer extends Player {
 
 		while ( depth != 4 ) {
 			if ( !stop_ ) {
-				
 				best = maxValue(board,0,depth);
-				System.out.println(best);
+				//System.out.println(best);
 				minCalled = 0;
 				maxCalled = 0;
 				depth++;

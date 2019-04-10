@@ -32,6 +32,12 @@ public class Estimate implements EvalHeuristic {
 		if ( board.isEmpty() ) {
 			return Integer.MAX_VALUE;
 		}
+		if(board.getWinner()==player) {
+			return Double.POSITIVE_INFINITY;
+		}
+		else if(board.getWinner()==player.other()) {
+			return Double.NEGATIVE_INFINITY;
+		}
 		int playerVal = 0;
 		int opponentVal = 0;
 		for ( int col = 0 ; col < board.getNumCols() ; col++ ) {
@@ -46,6 +52,15 @@ public class Estimate implements EvalHeuristic {
 		return playerVal - opponentVal;
 	}
 
+	
+	public double hs(ConnectFourBoard board, GamePiece player, int col) {
+		int row;
+		int playerVal = 0;
+		if ( (row = getTopMostEmpty(board,col)) != -1 ) {
+			playerVal += getValue(board,player,row,col);
+		}
+		return playerVal;
+	}
 	/**
 	 * (non-Javadoc) Evaluates the value of a position that represents various
 	 * groups of four surrounding it
@@ -64,13 +79,13 @@ public class Estimate implements EvalHeuristic {
 			group.add(0);
 		}
 
-		group.set(0,checkDirection(board,row,col,-1,0));
-		group.set(1,checkDirection(board,row,col,0,-1));
-		group.set(2,checkDirection(board,row,col,0,1));
-		group.set(3,checkDirection(board,row,col,1,1));
-		group.set(4,checkDirection(board,row,col,-1,1));
-		group.set(5,checkDirection(board,row,col,1,-1));
-		group.set(6,checkDirection(board,row,col,-1,-1));
+		group.set(0,checkDirection(board,player,row,col,-1,0));
+		group.set(1,checkDirection(board,player,row,col,0,-1));
+		group.set(2,checkDirection(board,player,row,col,0,1));
+		group.set(3,checkDirection(board,player,row,col,1,1));
+		group.set(4,checkDirection(board,player,row,col,-1,1));
+		group.set(5,checkDirection(board,player,row,col,1,-1));
+		group.set(6,checkDirection(board,player,row,col,-1,-1));
 		if ( (groupValue(group.get(0)) + groupValue(group.get(1))
 		    + groupValue(group.get(2)) + groupValue(group.get(3))
 		    + groupValue(group.get(4)) + groupValue(group.get(5))
@@ -91,7 +106,7 @@ public class Estimate implements EvalHeuristic {
 
 	}
 
-	private int checkDirection ( ConnectFourBoard board, int row, int col, int x,
+	private int checkDirection ( ConnectFourBoard board,GamePiece player,  int row, int col, int x,
 	                             int y ) {
 		int value = 1;
 
@@ -101,7 +116,7 @@ public class Estimate implements EvalHeuristic {
 				if ( target == GamePiece.NONE ) {
 					continue;
 				}
-				if ( player_.isMine(target) ) {
+				if ( player==(target) ) {
 					value++;
 				} else {
 					return -1;

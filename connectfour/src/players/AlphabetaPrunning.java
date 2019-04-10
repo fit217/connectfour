@@ -53,7 +53,7 @@ public class AlphabetaPrunning extends Player{
 		State best = new State(2,board);
 		while(!stop_) {
 			best = maxValue( best, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY,0,depth);
-			if(new Estimate(this).h(board,piece_) >= 4096) break;
+			if(new Estimate(this).hs(board,piece_,best.getMove()) >= 4096) break;
 			depth++;
 		}
 		System.out.println(depth);
@@ -61,7 +61,7 @@ public class AlphabetaPrunning extends Player{
 	}
 	
 	private State maxValue(State state, double alpha, double beta, int level, int depth) {
-		if(level == depth) {
+		if(level == depth || state.getBoard().getWinner()!=GamePiece.NONE) {
 			return state;
 		}
 		State max = state;
@@ -76,7 +76,8 @@ public class AlphabetaPrunning extends Player{
 				continue;
 			}
 			State newState = minValue(new State(i,temp),alpha,beta,level+1,depth);
-			double comp = new Estimate(this).h(newState.getBoard(),piece_);
+
+			double comp = new Estimate(this).hs(newState.getBoard(),piece_,newState.getMove());
 			if(v < comp) {
 				v= comp;
 				max = newState;
@@ -93,7 +94,7 @@ public class AlphabetaPrunning extends Player{
 	}
 	
 	private State minValue(State state, double alpha, double beta, int level, int depth) {
-		if(level == depth) {
+		if(level == depth || state.getBoard().getWinner()!=GamePiece.NONE) {
 			return state;
 		}
 		State min = state;
@@ -107,7 +108,7 @@ public class AlphabetaPrunning extends Player{
 				continue;
 			}
 			State newState = maxValue(new State(i,temp),alpha,beta,level+1,depth);
-			double comp = new Estimate(this).h(newState.getBoard(),piece_);
+			double comp = new Estimate(this).hs(newState.getBoard(),piece_,newState.getMove());
 			if(v > comp) {
 				v= comp;
 				min = newState;
