@@ -63,16 +63,29 @@ public class minimaxPlayer extends Player {
 		reset();// resets move and stop at the start of the turn
 		// TODO determine the move
 		int choice = 3;
-		System.out.println(super.getTimeout());
+		//System.out.println(super.getTimeout());
 		try {
 			choice = miniMax(board,1);
 		} catch ( GameRuleViolation e ) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("Player is making a move");
+		System.out.println("MiniMax Player is making a move");
+/*		ConnectFourBoard newState = board.copy();
+		try {
+			newState.drop(piece_,choice);
+			System.out.println("Piece dropped at " + new Estimate(this).getTopMostEmpty(board,choice) + ", " + choice);
+			System.out.println("The board value for minimax player is no " + new Estimate(this).h(newState,piece_));
+		} catch ( GameRuleViolation e ) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+*/		
+		//System.out.println("Column " + choice + ", Row" + new Estimate(this).getTopMostEmpty(board,choice));
+		//System.out.println("Move is at column " + choice +  ", Value : " + new Estimate(this).getValue(board,this.piece_,choice,new Estimate(this).getTopMostEmpty(board,choice)));
+		
 		move_ = new Move(piece_,choice,false);
-		System.out.print("Move is at column " + choice);
+
 	}
 
 	public int miniMax ( ConnectFourBoard board, int depth )
@@ -80,8 +93,7 @@ public class minimaxPlayer extends Player {
 
 		double best = 3;
 
-		while ( depth != 2 ) {
-			System.out.println(stop_ +"___________________________________________________-");
+		while ( depth != 4 ) {
 			if ( !stop_ ) {
 				
 				best = maxValue(board,0,depth);
@@ -103,10 +115,10 @@ public class minimaxPlayer extends Player {
 			return new Estimate(this).h(state,piece_);
 		}
 		maxCalled++;
-		System.out.println("max called " + maxCalled);
+		//System.out.println("max called " + maxCalled);
 		if ( level == depth ) {
 			// System.out.println(new Estimate(this).h(state,piece_));
-			System.out.println("Terminal state");
+			//System.out.println("Terminal state");
 			return new Estimate(this).h(state,piece_);
 		}
 		double v = Double.NEGATIVE_INFINITY;
@@ -124,16 +136,16 @@ public class minimaxPlayer extends Player {
 				e.printStackTrace();
 				continue;
 			}
-			double temp = minValue(newState,level++,depth);
-			System.out.println(temp + " vs " + v);
+			double temp = minValue(newState,level+1,depth);
+			//System.out.println(temp + " vs " + v);
 			if ( v < temp ) {
 				v = temp;
 				best = i;
 			}
 
-			v = Math.max(v,minValue(newState,level++,depth));
+			//v = Math.max(v,minValue(newState,level+1,depth));
 		}
-		if ( level == 1 ) {
+		if ( level == 0 ) {
 			return best;
 		} else {
 			return v;
@@ -146,11 +158,11 @@ public class minimaxPlayer extends Player {
 			return new Estimate(this).h(state,piece_.other());
 		}
 		minCalled++;
-		System.out.println("min called " + minCalled);
+		//System.out.println("min called " + minCalled);
 		// System.out.println(level);
 		if ( level == depth ) {
 			// System.out.println(new Estimate(this).h(state,piece_.other()));
-			System.out.println("Terminal state");
+			//System.out.println("Terminal state");
 			return new Estimate(this).h(state,piece_.other());
 		}
 		double best = 3;
@@ -168,21 +180,23 @@ public class minimaxPlayer extends Player {
 				e.printStackTrace();
 				continue;
 			}
-			double temp = maxValue(newState,level++,depth);
-			System.out.println(temp + " vs " + v);
+			double temp = maxValue(newState,level+1,depth);
+			//System.out.println(temp + " vs " + v);
+
 			if ( v > temp ) {
 				v = temp;
 				best = i;
 			}
 
-			// v = Math.min(v,maxValue(newState,level++,depth));
+			//v = Math.min(v,maxValue(newState,level+1,depth));
 		}
-		if ( level == 1 ) {
+		/*if ( level == 1 ) {
+			System.out.println(best +"_____min");
 			return best;
 		} else {
 			return v;
-		}
-		// return v;
+		}*/
+		 return v;
 	}
 
 }

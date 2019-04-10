@@ -47,7 +47,8 @@ public class Estimate implements EvalHeuristic {
 	}
 
 	/**
-	 * (non-Javadoc) Evaluates the effect of a piece dropped on a board
+	 * (non-Javadoc) Evaluates the value of a position that represents various
+	 * groups of four surrounding it
 	 * 
 	 * @param board
 	 *          The board before the move has been made
@@ -74,14 +75,14 @@ public class Estimate implements EvalHeuristic {
 		    + groupValue(group.get(2)) + groupValue(group.get(3))
 		    + groupValue(group.get(4)) + groupValue(group.get(5))
 		    + groupValue(group.get(6))) > 0 ) {
-			System.out.println(row+"__________"+col);
+			/*System.out.println(row + "__________" + col);
 			System.out.println("In Row Below: " + group.get(0));
 			System.out.println("In Column to the left: " + group.get(1));
 			System.out.println("In Column to the right: " + group.get(2));
 			System.out.println("In diagonal to the Upper right: " + group.get(3));
 			System.out.println("In diagonal to the Lower right: " + group.get(4));
 			System.out.println("In diagonal to the Upper left: " + group.get(5));
-			System.out.println("In diagonal to the Lower left: " + group.get(6));
+			System.out.println("In diagonal to the Lower left: " + group.get(6));*/
 		}
 		return (groupValue(group.get(0)) + groupValue(group.get(1))
 		    + groupValue(group.get(2)) + groupValue(group.get(3))
@@ -92,7 +93,7 @@ public class Estimate implements EvalHeuristic {
 
 	private int checkDirection ( ConnectFourBoard board, int row, int col, int x,
 	                             int y ) {
-		int value = 0;
+		int value = 1;
 
 		for ( int i = 1 ; i < 4 ; i++ ) {
 			try {

@@ -34,9 +34,13 @@ public class HumanPlayer extends Player {
 	public void chooseMove ( ConnectFourBoard board ) {
 		System.out.println(getName() + ", it's your turn");
 		reset();
+		int row=0;
+		int colt=0;
 		for ( ; move_ == null && !stop_ ; ) {
 			int col = gui_.getMove();
 			if ( col != -1 && !board.isFull(col) ) {
+				row=estimate_.getTopMostEmpty(board,col);
+				colt=col;
 				move_ = new Move(piece_,col,false);
 			} else {
 				if ( board.isFull(col) ) {
@@ -49,15 +53,8 @@ public class HumanPlayer extends Player {
 			System.out.println("no move made; using default move");
 			move_ = new Move(piece_,board.getLegalMove(),true);
 		}
+		//System.out.println("Value: "+estimate_.getValue(board,this.getPiece(),row,colt) + " at " + row + ", " + colt);
+		System.out.println("Value of the board for "+piece_.getColor() + " is now: " +estimate_.h(board,piece_));
 		
-		for(int i=0;i<board.getNumRows();i++) {
-			if(board.getPiece(i+1,move_.getCol())==GamePiece.NONE) {
-				System.out.println("Move in position "+ i +"," + move_.getCol());
-				estimate_.getValue(board,piece_,i,move_.getCol());
-				break;
-				}
-			
-		}
-		estimate_.h(board,piece_);
 	}
 }
